@@ -9,6 +9,10 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 
 *请求方式：GET*
 
+读取字幕时优先使用 `/x/player/wbi/v2`。2026-09-10 实测，旧 `/x/player/v2` 对 `BV1mgwezhEXX` 返回正确的 aid/bvid/cid，却附带其他视频的字幕；新接口与网页播放器均返回空字幕列表。该观察针对字幕来源可靠性，不代表旧接口的其他用途均已失效。
+
+部分字幕需要认证：Cookie (SESSDATA)。该日期的网页请求及独立请求均可直接使用 `aid`、`cid`，未附加 `wts`、`w_rid`。
+
 **URL参数:**
 
 | 参数名 | 类型 | 内容      | 必要性      | 备注              |
@@ -42,7 +46,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | no_share   | bool | 禁止分享? |  |
 | cid        | num  | 视频 cid   |      |
 | dm_mask    | obj  | webmask 防挡字幕信息 | 若无则没有防挡功能 |
-| subtitle   | obj  | 字幕信息 | 若无则没有字幕, 若不登陆则为空 |
+| subtitle   | obj  | 字幕信息 | 空列表需结合 `data.need_login_subtitle` 判断，不一定表示视频无字幕 |
 | view_points | array  | 分段章节信息 |  |
 | ip_info    | obj  | 请求 IP 信息 |      |
 | login_mid  | num  | 登录用户 mid |      |
@@ -59,7 +63,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | last_play_cid | num | 上次观看 cid? |  |
 | now_time | num | 当前 UNIX 秒级时间戳 |  |
 | online_count | num | 在线人数 |  |
-| need_login_subtitle | bool | 是否必须登陆才能查看字幕 | 是的 |
+| need_login_subtitle | bool | 是否需要登录才能读取字幕 | 位于 `data` 顶层；为 `true` 且字幕列表为空时，应先登录或更新登录态 |
 | preview_toast | str | `为创作付费，购买观看完整视频\|购买观看` |  |
 | interaction | obj | 互动视频资讯 | 若非互动视频，则无该栏位（直接没有该键，而非栏位值为空）|
 | options | obj |  |  |
@@ -111,7 +115,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 |allow_submit|bool | true   |      |
 |  lan      |  str | ""          |      |
 |lan_doc | str | ""    | |
-|subtitles| array |  | 不登录为 `[]` |
+|subtitles| array | 字幕轨列表 | 无可用轨道或缺少所需登录态时可能为 `[]` |
 
 `subtitle` 对象中的 `subtitles` 数组内的元素:
 
@@ -119,13 +123,31 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | --------- | ----- | -------- | ---- |
 | ai_status | num  |    |      |
 | ai_type   | num  |    |   |
-| id  | num | | |
-|id_str | str| | 和 id 不一样 |
+| id  | num | 字幕 ID | 可能超过 JavaScript Number 的安全整数范围 |
+|id_str | str| 字幕 ID 的字符串表示 | 保留字符串用于完整保存、比对，避免浮点精度损失 |
 | is_lock | bool | | |
 | lan | str | 语言类型英文字母缩写 ||
 | lan_doc | str| 语言类型中文名称 | |
-|subtitle_url|str| 资源 url 地址 | |
+|subtitle_url|str| 字幕正文 JSON 地址 | `//` 开头时补 `https:`；URL 可能带有时效性签名 |
 |type| num | 0 | |
+
+`subtitle_url` 返回的 JSON 根对象（仅列字幕正文相关字段）:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| body | array | 字幕条目列表 | 合法列表可以为空；字段缺失或类型错误不应视为空字幕 |
+
+`body` 数组中的对象:
+
+| 字段 | 类型 | 内容 | 备注 |
+| ---- | ---- | ---- | ---- |
+| from | num | 开始时间，单位秒 | 非负有限数值 |
+| to | num | 结束时间，单位秒 | 不小于 `from` |
+| content | str | 字幕文字 | |
+
+下载正文时先检查 HTTP 状态，再验证 JSON 和上述字段。建议核对 player 响应的 aid/bvid/cid，并对照对应分 P 的时长检查字幕时间上界。例如客户端可容许 5 秒末尾误差，超过 `pages[].duration + 5` 秒时拒绝该轨正文并报告错误；这是异常检测策略，并非接口协议规定。身份和时长一致不能证明字幕语义正确，不应在新接口无字幕时自动回退到旧接口。
+
+当 `data.need_login_subtitle=true` 且 `data.subtitle.subtitles=[]` 时，无法据此断言视频没有字幕；登录后再确认。标志为 `false` 且列表为空，也只表示本次响应未提供可用字幕轨。
 
 `data`对象中的`view_point` 数组内的元素:
 
@@ -167,6 +189,43 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | qa_detail_link | str  | （？）                         |                  |
 
 **示例:**
+
+已登录读取 `BV1aD4y127GE` 的 AI 中文字幕。2026-09-10 网页播放器与独立请求返回同一条 `ai-zh` 字幕轨，正文共 512 条，最大结束时间 1087.18 秒。
+
+```shell
+curl -G 'https://api.bilibili.com/x/player/wbi/v2' \
+  --data-urlencode 'aid=711776837' \
+  --data-urlencode 'cid=234622982' \
+  -b 'SESSDATA=xxx'
+```
+
+<details>
+<summary>查看字幕元信息响应（仅保留相关字段，资源 URL 已脱敏）:</summary>
+
+```json
+{
+  "code": 0,
+  "data": {
+    "aid": 711776837,
+    "bvid": "BV1aD4y127GE",
+    "cid": 234622982,
+    "need_login_subtitle": false,
+    "subtitle": {
+      "subtitles": [
+        {
+          "id_str": "1082184109511715840",
+          "lan": "ai-zh",
+          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/xxx.json"
+        }
+      ]
+    }
+  }
+}
+```
+
+</details>
+
+该轨的精确 `id_str` 为 `1082184109511715840`；浏览器将数值 ID 显示为 `1082184109511715800` 是 JavaScript Number 精度损失，不应据此判断为字幕错配。
 
 未登录, `aid=1906473802`
 
@@ -301,7 +360,7 @@ curl -G 'https://api.bilibili.com/x/player/wbi/v2' \
 
 </details>
 
-已登陆, `aid=60977932`
+旧接口历史示例：已登录, `aid=60977932`
 
 ```shell
 curl -G 'https://api.bilibili.com/x/player/v2' \
@@ -396,7 +455,7 @@ curl -G 'https://api.bilibili.com/x/player/v2' \
           "lan": "zh-Hans",
           "lan_doc": "中文（简体）",
           "is_lock": true,
-          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/c49b18a284739d99df1e3723cdf72c0c82db98e0.json?auth_key=1725003260-5d0391a07f4f47f6960f60cf5045dff3-0-fc16c1f67a6b41edcb2a89d5e0c9bfdd",
+          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/xxx-zh.json",
           "type": 0,
           "id_str": "13643112644608002",
           "ai_type": 0,
@@ -407,7 +466,7 @@ curl -G 'https://api.bilibili.com/x/player/v2' \
           "lan": "en-US",
           "lan_doc": "英语（美国）",
           "is_lock": true,
-          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/2b38bc0f5d7671176964d4c3de441ed37568500c.json?auth_key=1725003260-5f709a74aa884751b77f86b6f6a48078-0-9b2fc3c18b99b1bf0cc7c7e63d18f686",
+          "subtitle_url": "//aisubtitle.hdslb.com/bfs/subtitle/xxx-en.json",
           "type": 0,
           "id_str": "13643200114196484",
           "ai_type": 0,
