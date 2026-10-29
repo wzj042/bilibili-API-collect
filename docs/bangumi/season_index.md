@@ -6,7 +6,9 @@
 > 
 *请求方式：GET*
 
-鉴权方式：Cookie（SESSDATA）
+2026-10-29 实测：番剧、电影、纪录片、电视剧列表可在浏览器内不携带 Cookie 和 WBI 签名读取，四类列表首页剧集 ID 与网页抓包一致。不能据此保证所有地区、内容和未来请求均免登录；发生限制时应保留接口错误，不将失败视为空列表。
+
+各频道可用筛选项、值域及排序方式见 [索引筛选条件](season_condition.md)。建议先调用配置接口，再将 `field` 和选定的 `keyword` 作为列表查询参数，避免跨频道复用不适用的枚举。
 
 **url参数：**
 
@@ -15,21 +17,25 @@
 | season_type          | num  | 类别         | 必要   | 番剧：`1` &nbsp; 电影：`2` &nbsp; 纪录片：`3`<br>国创：`4` &nbsp; 电视剧：`5` &nbsp; 综艺：`7`          |
 | type                 | num  | 未知作用     | 必要   | 固定为 `1`                                                                                          |
 | page                 | num  | 页码         | 非必要 | 默认为 `1`                                                                                          |
-| pagesize             | num  | 每页项数     | 非必要 | 定义域：[1,∞)，<br>超出最大项数则返回最大项数                                                          |
+| pagesize             | num  | 每页项数     | 非必要 | 网页请求为 `20`，本次另验证 `3`；最大值与越界行为未验证，以响应 `size` 和 `list` 为准 |
 | season_version       | num  | 类型         | 非必要 | 全部：`-1` &nbsp; 正片：`1` &nbsp; 电影：`2` &nbsp; 其他：`3`                                        |
 | spoken_language_type | num  | 配音         | 非必要 | 全部：`-1` &nbsp; 原声：`1` &nbsp; 中文配音：`2`                                                    |
-| area                 | str  | 地区         | 非必要 | 地区代码列表 ∈N∩[1,70] 例如日本：`2` 中国：`1,6,7` [完整地区代码见表](info.md#剧集地区一览)<br>`-1`代表全部，前端页面有具体国家则可以单独请求具体国家如日本`2`，<br>将[1,70]中前端页面有的国家排除后一一列出则代表其他如`1,4,5,6,7,8...69,70`  |
+| area                 | str  | 地区         | 非必要 | 全部：`-1`；日本：`2`；电影“中国大陆”：`1`、“中国港台”：`6,7`；电视剧“中国”：`1,6,7`。“其他”的组合值因频道而异，应读取筛选配置。地区 ID 参考 [剧集地区一览](info.md#剧集地区一览) |
 | is_finish            | num  | 状态         | 非必要 | 全部：`-1` &nbsp; 完结：`1` &nbsp; 连载：`0`                                                        |
 | copyright            | str  | 版权         | 非必要 | 全部：`-1` &nbsp; 独家：`3` &nbsp; 其他：`1,2,4`                                                    |
 | season_status        | str  | 付费类型     | 非必要 | 全部：`-1` &nbsp; 免费：`1` &nbsp; 付费：`2,6` &nbsp; 大会员：`4,6`                                 |
 | season_month         | num  | 季度         | 非必要 | 全部：`-1` &nbsp; 一月：`1` &nbsp; 四月：`4` &nbsp; 七月：`7` &nbsp; 十月：`10`                     |
 | year                 | str  | 年份         | 非必要 | 适用于`国创`和`番剧`类别<br>除了`-1`代表全部外，其他情况以左闭右开区间形式表示，<br>如`[2025,2026)`代表2025年，`[2010,2015)`代表2010-2014年，`[1990,2000)`代表90年代，`[,1980)`代表更早  |
 | release_date         | str  | 年份         | 非必要 | 适用于`电影`，`电视剧`和`纪录片`类别<br>和year参数类似只是精确到秒级，<br>如`[2025-01-01 00:00:00,2026-01-01 00:00:00)`代表2025年，<br>`[1990-01-01 00:00:00,2000-01-01 00:00:00)`代表90年代  |
-| style_id             | num  | 风格         | 非必要 | 全部：`-1` &nbsp; 特定风格则值为该风格id，如原创：`10010`                                           |
+| style_id             | str  | 风格         | 非必要 | 全部：`-1`；单个风格 ID 如原创 `10010`；也可能为逗号分隔的多个 ID，见 [各频道筛选选项](season_condition.md#各频道筛选选项)。纪录片“电影”为 `-10`，电影“短片”为 `10104`，电视剧“短剧”为 `10103` |
 | producer_id          | num  | 出品方       | 非必要 | 全部：`-1` &nbsp; 特定出品方则值为该出品方id，如央视：`4`                                           |
 | order                | num  | 排序指标     | 非必要 | 更新时间：`0` &nbsp; 弹幕数量：`1` &nbsp; 播放数量：`2` &nbsp;<br>追剧人数：`3` &nbsp; 最高评分：`4` &nbsp; 开播时间：`5` &nbsp; 上映时间：`6`  |
-| sort                 | num  | 排序方向     | 非必要 | 增序：`1` &nbsp; 降序：`0` 默认为降序                                                               |
-| st                   | num  | 未知作用     | 非必要 | 值与 `season_type` 相同，合理怀疑是其缩写                                                           |
+| sort                 | num  | 排序方向     | 非必要 | 升序：`1`；降序：`0`，默认为降序；页面可选方向由配置接口的 `data.order[].sort` 给出，四频道最高评分均只提供降序 |
+| st                   | num  | 页面类别状态 | 非必要 | 索引页 URL 片段和网页请求中的值与 `season_type` 相同；实测保留 `type=1`、`season_type` 时可省略，API 请求仍应显式提供 `season_type` |
+
+`producer_id` 是本次纪录片索引提供的筛选维度；四频道的筛选和排序差异见 [频道与筛选维度](season_condition.md#频道与筛选维度)。`area` 的“其他”以及 `style_id` 的组合值应从配置读取，不自行拼接推测的 ID 集合。逗号、方括号、空格等由 URL 编码器处理；不要把区间转为时间戳或整数。
+
+`season_status` 是查询的付费筛选条件，与返回条目中的同名状态字段不应直接按数值等同解释。切换筛选条件时客户端应重置 `page=1`，再通过 `has_next` 判断是否继续翻页。
 
 **json回复：**
 
@@ -99,6 +105,8 @@
 
 **示例：**
 
+以下命令为 Bash 等 shell 的多行写法，Windows PowerShell 可合并成一行并使用 `curl.exe`。组合筛选示例见 [各频道组合查询](#各频道组合查询)。
+
 查询番剧类别索引按最高评分降序排序
 
 ```shell
@@ -106,8 +114,7 @@ curl -G 'https://api.bilibili.com/pgc/season/index/result' \
 --data-urlencode 'type=1' \
 --data-urlencode 'season_type=1' \
 --data-urlencode 'order=4' \
---data-urlencode 'sort=0' \
--b 'SESSDATA=xxx'
+--data-urlencode 'sort=0'
 ```
 
 <details>
@@ -804,3 +811,68 @@ curl -G 'https://api.bilibili.com/pgc/season/index/result' \
 ```
 
 </details>
+
+## 各频道组合查询
+
+以下参数来自 2026-10-29 实测。不同维度可以组合，值应按 [筛选条件](season_condition.md) 返回的 `keyword` 原样传递；组合查询成功不表示逐部作品的分类和年份已人工核验。
+
+**电影：中国港台 + 科幻，按最高评分排序**
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/index/result' \
+  --data-urlencode 'type=1' \
+  --data-urlencode 'season_type=2' \
+  --data-urlencode 'area=6,7' \
+  --data-urlencode 'style_id=10023' \
+  --data-urlencode 'order=4' \
+  --data-urlencode 'sort=0' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=3'
+```
+
+**纪录片：电影子类型 + BBC**
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/index/result' \
+  --data-urlencode 'type=1' \
+  --data-urlencode 'season_type=3' \
+  --data-urlencode 'style_id=-10' \
+  --data-urlencode 'producer_id=1' \
+  --data-urlencode 'order=2' \
+  --data-urlencode 'sort=0' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=3'
+```
+
+本次该组合返回 `code=0`、`total=0`、`list=[]`；单独筛选“电影”或“BBC”均有结果。应先判断业务码，再区分空结果与请求失败。
+
+**电视剧：中国 + 其他风格**
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/index/result' \
+  --data-urlencode 'type=1' \
+  --data-urlencode 'season_type=5' \
+  --data-urlencode 'area=1,6,7' \
+  --data-urlencode 'style_id=10086,10088,10089,10017,10083,10082,10087,10085' \
+  --data-urlencode 'order=2' \
+  --data-urlencode 'sort=0' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=3'
+```
+
+**番剧：电影 + 中文配音 + 2020 至 2026 年**
+
+```shell
+curl -G 'https://api.bilibili.com/pgc/season/index/result' \
+  --data-urlencode 'type=1' \
+  --data-urlencode 'season_type=1' \
+  --data-urlencode 'season_version=2' \
+  --data-urlencode 'spoken_language_type=2' \
+  --data-urlencode 'year=[2020,2027)' \
+  --data-urlencode 'order=3' \
+  --data-urlencode 'sort=0' \
+  --data-urlencode 'page=1' \
+  --data-urlencode 'pagesize=3'
+```
+
+`year` 使用年份区间；电影、电视剧、纪录片的 `release_date` 使用日期时间区间，例如 `release_date=[2025-01-01 00:00:00,2026-01-01 00:00:00)`。两者均为左闭右开，但不能混用参数名。
