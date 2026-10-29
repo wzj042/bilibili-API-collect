@@ -1,6 +1,6 @@
 # 视频章节（进度条分段）
 
-## 获取章节
+## 获取视频章节（web 端）
 
 > https://api.bilibili.com/x/player/wbi/v2
 
@@ -10,33 +10,160 @@
 
 **URL 参数：**
 
-| 参数 | 类型 | 必要性 | 说明 |
-| --- | --- | --- | --- |
-| aid | num | 与 bvid 二选一 | 稿件 avid |
-| bvid | str | 与 aid 二选一 | 稿件 BV 号 |
-| cid | num | 必要 | 当前分 P 的 cid |
+| 参数名 | 类型 | 内容 | 必要性 | 备注 |
+| --- | --- | --- | --- | --- |
+| aid | number | 稿件 avid | 必要 (可选) | aid 与 bvid 任选一个 |
+| bvid | string | 稿件 bvid | 必要 (可选) | aid 与 bvid 任选一个 |
+| cid | number | 分 P 的 cid | 必要 | 通过视频基本信息的 `data.pages` 获取 |
+| w_rid | string | WBI 签名 | 非必要（本样本） | 网页主请求携带，最小复现未携带；参见下方实测说明 |
+| wts | number | WBI 签名时间戳 | 非必要（本样本） | 与 `w_rid` 配套，单位为秒 |
 
 2026-10-29（Asia/Hong_Kong）通过 Kimi Browser Extension 在真实网页抓包并复现。网页主请求带有 `w_rid`、`wts` 等参数；本样本仅传 `aid + cid` 或 `bvid + cid`、不带 Cookie 和 WBI 签名也成功。该结果是指定样本及当前网络环境的观察，不保证所有视频或未来接口都免签名、免登录。
 
-**响应：**
+**JSON 回复：**
 
 先检查 HTTP 状态和根对象 `code === 0`，再核对 `data.aid/bvid/cid` 与所选视频、分 P 一致。
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| data.view_points | array | 本次响应提供的章节列表；`[]` 表示本次没有提供章节 |
-| content | str | 章节标题 |
-| from | num | 起始时间，单位秒 |
-| to | num | 结束时间，单位秒 |
-| type | num | 本样本六项均为 `2`；其他取值含义本次未验证 |
-| imgUrl | str | 章节预览图；原响应可能使用 HTTP URL |
-| logoUrl | str | 本样本为空字符串 |
-| team_type | str | 本样本为空字符串 |
-| team_name | str | 本样本为空字符串 |
+根对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| code | number | 返回值 | `0`：成功；其他错误码参见 [播放器信息](player.md) |
+| message | string | 错误信息 | 成功时通常为 `"0"` |
+| ttl | number | 响应 ttl | 通常为 `1` |
+| data | object | 播放器信息本体 | 下表只列章节读取相关字段 |
+
+`data` 对象（节选）：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| aid | number | 稿件 avid | 应与请求的视频一致 |
+| bvid | string | 稿件 bvid | 应与请求的视频一致 |
+| cid | number | 分 P 的 cid | 应与所选分 P 一致 |
+| view_points | array | 分段章节列表 | `[]` 表示本次响应没有提供章节 |
+
+`data` 中的 `view_points` 数组中的对象：
+
+| 字段 | 类型 | 内容 | 备注 |
+| --- | --- | --- | --- |
+| content | string | 章节标题 | |
+| from | number | 章节起始时间 | 单位为秒，相对于当前分 P |
+| to | number | 章节结束时间 | 单位为秒，相对于当前分 P |
+| type | number | 类型（？） | 本样本六项均为 `2`；其他取值含义本次未验证 |
+| imgUrl | string | 章节预览图 URL | 原响应可能使用 HTTP URL |
+| logoUrl | string | 标识图 URL（？） | 本样本为空字符串，作用尚不明确 |
+| team_type | string | （？） | 本样本为空字符串，作用尚不明确 |
+| team_name | string | （？） | 本样本为空字符串，作用尚不明确 |
 
 章节 `from/to` 是同一分 P 内的时间点。绘制分段进度条时可按 `from / duration` 定位、按 `(to - from) / duration` 计算宽度，点击章节跳转到 `from` 秒。客户端可采用 `[from, to)` 判断当前章节，在视频终点单独处理最后一段；这是客户端约定，不是接口声明的区间规则。不要假设任意视频章节必然连续、覆盖全部时长或具有相同 `type`。
 
 字段缺失、类型错误、身份不符、业务失败不能当成空章节。本次只验证读取已发布章节，没有验证创作者添加、修改或提交章节的接口。
+
+**示例：**
+
+获取视频 `av463665680` / `BV1vL411G7N7` 第一 P（`cid=427178148`）的章节。
+
+avid 方式：
+
+```shell
+curl -G 'https://api.bilibili.com/x/player/wbi/v2' \
+  -A 'Mozilla/5.0' \
+  -e 'https://www.bilibili.com/' \
+  --data-urlencode 'aid=463665680' \
+  --data-urlencode 'cid=427178148'
+```
+
+bvid 方式：
+
+```shell
+curl -G 'https://api.bilibili.com/x/player/wbi/v2' \
+  -A 'Mozilla/5.0' \
+  -e 'https://www.bilibili.com/' \
+  --data-urlencode 'bvid=BV1vL411G7N7' \
+  --data-urlencode 'cid=427178148'
+```
+
+以上为 Bash 等 shell 的多行写法；Windows PowerShell 可将命令合并成一行并使用 `curl.exe`。
+
+<details>
+<summary>查看响应示例（仅保留视频身份及章节字段）：</summary>
+
+播放器响应还包含字幕、登录用户等信息，以下省略这些无关字段；六个章节对象保留实测原值。
+
+```json
+{
+  "code": 0,
+  "data": {
+    "aid": 463665680,
+    "bvid": "BV1vL411G7N7",
+    "cid": 427178148,
+    "view_points": [
+      {
+        "type": 2,
+        "from": 0,
+        "to": 117,
+        "content": "开头",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      },
+      {
+        "type": 2,
+        "from": 117,
+        "to": 257,
+        "content": "分段章节的效果",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      },
+      {
+        "type": 2,
+        "from": 257,
+        "to": 326,
+        "content": "为什么要使用分段章节",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      },
+      {
+        "type": 2,
+        "from": 326,
+        "to": 458,
+        "content": "使用分段章节的要求和限制",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      },
+      {
+        "type": 2,
+        "from": 458,
+        "to": 633,
+        "content": "如何为你的视频添加分段章节",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      },
+      {
+        "type": 2,
+        "from": 633,
+        "to": 670,
+        "content": "结尾",
+        "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+        "logoUrl": "",
+        "team_type": "",
+        "team_name": ""
+      }
+    ]
+  }
+}
+```
+
+</details>
 
 ## 指定视频实测
 
