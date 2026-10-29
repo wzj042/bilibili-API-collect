@@ -1,0 +1,521 @@
+{
+  "observed_on": "2026-10-29",
+  "timezone": "Asia/Hong_Kong",
+  "source": "https://www.bilibili.com/video/BV1vL411G7N7/",
+  "capture": {
+    "request": {
+      "endpoint": "/x/player/wbi/v2",
+      "parameter_names": [
+        "aid",
+        "cid",
+        "isGaiaAvoided",
+        "web_location",
+        "dm_img_list",
+        "dm_img_str",
+        "dm_cover_img_str",
+        "dm_img_inter",
+        "x-bili-device-req-json",
+        "x-bili-locale-json",
+        "w_rid",
+        "wts"
+      ],
+      "header_names": [
+        "accept",
+        "referer",
+        "user-agent",
+        "sec-ch-ua",
+        "sec-ch-ua-mobile",
+        "sec-ch-ua-platform",
+        "accept-encoding",
+        "accept-language",
+        "cache-control",
+        "cookie",
+        "origin",
+        "pragma",
+        "priority",
+        "sec-fetch-dest",
+        "sec-fetch-mode",
+        "sec-fetch-site"
+      ]
+    },
+    "status": 200,
+    "code": 0,
+    "data": {
+      "aid": 463665680,
+      "bvid": "BV1vL411G7N7",
+      "cid": 427178148,
+      "view_points": [
+        {
+          "type": 2,
+          "from": 0,
+          "to": 117,
+          "content": "开头",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 117,
+          "to": 257,
+          "content": "分段章节的效果",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 257,
+          "to": 326,
+          "content": "为什么要使用分段章节",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 326,
+          "to": 458,
+          "content": "使用分段章节的要求和限制",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 458,
+          "to": 633,
+          "content": "如何为你的视频添加分段章节",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 633,
+          "to": 670,
+          "content": "结尾",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        }
+      ]
+    }
+  },
+  "replays": [
+    {
+      "path": "/x/web-interface/view",
+      "query": "bvid=BV1vL411G7N7",
+      "credentials": "omit",
+      "status": 200,
+      "code": 0,
+      "data": {
+        "aid": 463665680,
+        "bvid": "BV1vL411G7N7",
+        "cid": 427178148,
+        "title": "如何为你的B站视频添加进度条分段",
+        "pages": [
+          {
+            "cid": 427178148,
+            "page": 1,
+            "from": "vupload",
+            "part": "如何为你的B站视频添加进度条",
+            "duration": 670,
+            "vid": "",
+            "weblink": "",
+            "dimension": {
+              "width": 1920,
+              "height": 1080,
+              "rotate": 0
+            },
+            "first_frame": "http://i2.hdslb.com/bfs/storyff/n211018a219pddg71r6fbb1opv4lx0d7_firsti.jpg",
+            "ctime": 1634554558
+          }
+        ]
+      }
+    },
+    {
+      "path": "/x/player/wbi/v2",
+      "query": "aid=463665680&cid=427178148",
+      "credentials": "include",
+      "status": 200,
+      "code": 0,
+      "data": {
+        "aid": 463665680,
+        "bvid": "BV1vL411G7N7",
+        "cid": 427178148,
+        "view_points": [
+          {
+            "type": 2,
+            "from": 0,
+            "to": 117,
+            "content": "开头",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 117,
+            "to": 257,
+            "content": "分段章节的效果",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 257,
+            "to": 326,
+            "content": "为什么要使用分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 326,
+            "to": 458,
+            "content": "使用分段章节的要求和限制",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 458,
+            "to": 633,
+            "content": "如何为你的视频添加分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 633,
+            "to": 670,
+            "content": "结尾",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/x/player/wbi/v2",
+      "query": "aid=463665680&cid=427178148",
+      "credentials": "omit",
+      "status": 200,
+      "code": 0,
+      "data": {
+        "aid": 463665680,
+        "bvid": "BV1vL411G7N7",
+        "cid": 427178148,
+        "view_points": [
+          {
+            "type": 2,
+            "from": 0,
+            "to": 117,
+            "content": "开头",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 117,
+            "to": 257,
+            "content": "分段章节的效果",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 257,
+            "to": 326,
+            "content": "为什么要使用分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 326,
+            "to": 458,
+            "content": "使用分段章节的要求和限制",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 458,
+            "to": 633,
+            "content": "如何为你的视频添加分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 633,
+            "to": 670,
+            "content": "结尾",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/x/player/wbi/v2",
+      "query": "bvid=BV1vL411G7N7&cid=427178148",
+      "credentials": "omit",
+      "status": 200,
+      "code": 0,
+      "data": {
+        "aid": 463665680,
+        "bvid": "BV1vL411G7N7",
+        "cid": 427178148,
+        "view_points": [
+          {
+            "type": 2,
+            "from": 0,
+            "to": 117,
+            "content": "开头",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 117,
+            "to": 257,
+            "content": "分段章节的效果",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 257,
+            "to": 326,
+            "content": "为什么要使用分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 326,
+            "to": 458,
+            "content": "使用分段章节的要求和限制",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 458,
+            "to": 633,
+            "content": "如何为你的视频添加分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 633,
+            "to": 670,
+            "content": "结尾",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/x/player/v2",
+      "query": "aid=463665680&cid=427178148",
+      "credentials": "omit",
+      "status": 200,
+      "code": 0,
+      "data": {
+        "aid": 463665680,
+        "bvid": "BV1vL411G7N7",
+        "cid": 427178148,
+        "view_points": [
+          {
+            "type": 2,
+            "from": 0,
+            "to": 117,
+            "content": "开头",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 117,
+            "to": 257,
+            "content": "分段章节的效果",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 257,
+            "to": 326,
+            "content": "为什么要使用分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 326,
+            "to": 458,
+            "content": "使用分段章节的要求和限制",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 458,
+            "to": 633,
+            "content": "如何为你的视频添加分段章节",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          },
+          {
+            "type": 2,
+            "from": 633,
+            "to": 670,
+            "content": "结尾",
+            "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+            "logoUrl": "",
+            "team_type": "",
+            "team_name": ""
+          }
+        ]
+      }
+    }
+  ],
+  "all_player_arrays_equal": true,
+  "cli_verification": {
+    "http_and_kimi_equal": true,
+    "both_match_capture": true,
+    "data": {
+      "bvid": "BV1vL411G7N7",
+      "aid": 463665680,
+      "cid": 427178148,
+      "title": "如何为你的B站视频添加进度条分段",
+      "page": 1,
+      "duration": 670,
+      "view_points": [
+        {
+          "type": 2,
+          "from": 0,
+          "to": 117,
+          "content": "开头",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_0.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 117,
+          "to": 257,
+          "content": "分段章节的效果",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_117.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 257,
+          "to": 326,
+          "content": "为什么要使用分段章节",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_257.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 326,
+          "to": 458,
+          "content": "使用分段章节的要求和限制",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_326.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 458,
+          "to": 633,
+          "content": "如何为你的视频添加分段章节",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_458.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        },
+        {
+          "type": 2,
+          "from": 633,
+          "to": 670,
+          "content": "结尾",
+          "imgUrl": "http://i0.hdslb.com/bfs/vchapter/427178148_633.jpg",
+          "logoUrl": "",
+          "team_type": "",
+          "team_name": ""
+        }
+      ]
+    },
+    "error_paths": [
+      "invalid bvid",
+      "non-positive page",
+      "unreachable daemon"
+    ],
+    "unit_tests_passed": 4
+  }
+}

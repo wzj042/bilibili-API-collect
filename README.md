@@ -137,6 +137,7 @@ B站 API 采用 C/S 结构，大多数接口为 REST API 和 gRPC，少部分接
     - [ ] [稿件投诉](docs/video/appeal.md)
     - [ ] [视频合集](docs/video/collection.md)
     - [ ] [播放器](docs/video/player.md)
+    - [x] [视频章节（进度条分段）](docs/video/chapters.md)
 - [ ] [剧集 (番剧、影视)](docs/bangumi)
     - [ ] [基本信息](docs/bangumi/info.md)
     - [ ] [播放 & 下载地址（视频流）](docs/bangumi/videostream_url.md)

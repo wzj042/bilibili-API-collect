@@ -47,7 +47,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 | cid        | num  | 视频 cid   |      |
 | dm_mask    | obj  | webmask 防挡字幕信息 | 若无则没有防挡功能 |
 | subtitle   | obj  | 字幕信息 | 空列表需结合 `data.need_login_subtitle` 判断，不一定表示视频无字幕 |
-| view_points | array  | 分段章节信息 |  |
+| view_points | array  | 分段章节信息 | 见 [视频章节实测与复现](chapters.md) |
 | ip_info    | obj  | 请求 IP 信息 |      |
 | login_mid  | num  | 登录用户 mid |      |
 | login_mid_hash | str |  |  |
@@ -149,7 +149,7 @@ web 播放器的信息接口，提供正常播放需要的元数据，包括：�
 
 当 `data.need_login_subtitle=true` 且 `data.subtitle.subtitles=[]` 时，无法据此断言视频没有字幕；登录后再确认。标志为 `false` 且列表为空，也只表示本次响应未提供可用字幕轨。
 
-`data`对象中的`view_point` 数组内的元素:
+`data` 对象中的 `view_points` 数组内的元素:
 
 | 字段      | 类型  | 内容     | 备注 |
 | --------- | ----- | -------- | ---- |
